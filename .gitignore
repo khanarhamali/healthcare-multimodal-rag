@@ -1,0 +1,17 @@
+DockerFile
+.github/workflows/
+
+.env
+
+.venv/
+__pycache__/
+*.pyc
+
+*.pkl
+*.h5
+*.pt
+*.onnx
+best_skin_issues_model_v2*
+cystic acne.jpg
+temp_uploads/
+vectorstore/

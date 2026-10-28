@@ -1,0 +1,35 @@
+[project]
+name = "rag-eval"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Arham Ali Khan", email = "arhamalikhan10@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "deepeval>=4.3.2",
+    "faiss-cpu>=1.15.1",
+    "fastapi>=0.162.0",
+    "flashrank>=0.2.10",
+    "google-api-python-client>=2.201.0",
+    "google-auth-httplib2>=0.4.4",
+    "google-auth-oauthlib>=1.5.0",
+    "langchain>=1.4.7",
+    "langchain-community>=0.4.2",
+    "langchain-core>=1.7.0",
+    "langchain-google-community[drive]>=5.1.1",
+    "langchain-googledrive>=0.3.35",
+    "langchain-openai>=1.7.3",
+    "langgraph>=1.2.18",
+    "pymupdf>=2.0",
+    "pypdf>=6.21.3",
+    "pypdf2>=3.0.1",
+    "pytest>=9.1.1",
+    "python-multipart>=0.0.32",
+    "rank-bm25>=0.2.2",
+    "torch>=2.15.0",
+    "torchvision>=0.29.2",
+    "unstructured>=0.27.35",
+    "uvicorn>=0.54.0",
+]
