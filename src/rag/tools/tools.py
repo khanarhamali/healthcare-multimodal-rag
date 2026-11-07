@@ -4,7 +4,7 @@ src/rag/tools.py — Custom LangChain tools wrapper for the pipeline.
 
 import os
 from langchain_core.tools import tool
-from src.rag.vision_rag import SkinVisionPredictor
+from src.rag.model.vision import SkinVisionPredictor
 
 # Initialize your model instance safely
 MODEL_FILE_PATH = "E:\\rag-eval\\best_skin_issues_model_v2.pth"

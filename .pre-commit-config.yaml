@@ -1,0 +1,21 @@
+repos:
+  # 1. Standard Git Hooks (Syntax, spaces, and clean files)
+  - repo: https://github.com
+    rev: v5.0.0
+    hooks:
+      - id: check-yaml          # Validates YAML file syntax
+      - id: end-of-file-fixer   # Ensures files end with a newline character
+      - id: trailing-whitespace # Removes unnecessary trailing whitespaces automatically
+
+  # 2. Black (Code Formatter)
+  - repo: https://github.com
+    rev: 24.10.0
+    hooks:
+      - id: black               # Automatically formats your Python code to match standards
+
+  # 3. Flake8 (Linter for Syntax errors)
+  - repo: https://github.com
+    rev: 7.1.1
+    hooks:
+      - id: flake8              # Catches Python syntax errors and bad coding practices
+        args: [--max-line-length=88, "--extend-ignore=E203"]
