@@ -1,8 +1,8 @@
 import os
 from src.rag.agents.state import AgentState
 from src.rag.tools.tools import analyze_skin_image
-from src.rag.components.test_retriever import build_retriever
-from src.rag.components.test_generator import generate
+from src.rag.components.retriever import build_retriever
+from src.rag.components.generator import generate
 
 # Initialize the vector store retriever instance globally
 retriever_instance = build_retriever()

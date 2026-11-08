@@ -10,7 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 load_dotenv()
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
 INDEX_NAME = "skincare-rag-index"
 
 
@@ -33,7 +33,6 @@ def load_pdfs():
             loader = PyMuPDFLoader(pdf_path, extract_tables="markdown")
             loaded_docs = loader.load()
             
-            # Har page mein sirf zaroori metadata add karein
             for doc in loaded_docs:
                 doc.metadata["file_name"] = os.path.basename(pdf_path)
                 
@@ -77,7 +76,6 @@ def load_store():
         chunk_overlap=120,
     ).split_documents(docs)
 
-    # Har chunk ko uska apna chunk_id de dein
     for idx, chunk in enumerate(chunks):
         chunk.metadata["chunk_index"] = idx
 
