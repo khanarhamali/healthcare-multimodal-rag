@@ -8,9 +8,9 @@ from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-load_dotenv()
+load_dotenv(override=True)
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..","data")
 INDEX_NAME = "skincare-rag-index"
 
 

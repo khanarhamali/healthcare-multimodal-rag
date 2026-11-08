@@ -14,7 +14,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 # Temperature set to 0 for strict medical faithfulness and deterministic outputs
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)

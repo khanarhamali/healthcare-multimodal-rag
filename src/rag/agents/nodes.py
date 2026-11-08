@@ -46,7 +46,7 @@ def retrieval_node(state: AgentState) -> dict:
 
 
 def generator_node(state: AgentState) -> dict:
-    """Generates the final response based on processed state variables."""
+    """Generates the final response based on processed state variables and saves it to history."""
     condition = state.get("detected_condition", "None")
     query = state.get("user_query", "")
     chunks = state.get("retrieved_context", [])
@@ -55,4 +55,7 @@ def generator_node(state: AgentState) -> dict:
     
     print("Graph Node [Generator]: Producing grounded answer...")
     answer = generate(query=enriched_payload, context=chunks)
-    return {"final_response": answer}
+    return {
+        "final_response": answer,
+        "messages": [("assistant", answer)],
+    }

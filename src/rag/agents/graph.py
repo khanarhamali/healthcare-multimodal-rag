@@ -1,6 +1,12 @@
+import os
+from dotenv import load_dotenv
+from psycopg_pool import ConnectionPool
 from langgraph.graph import StateGraph, START, END
+from langgraph.checkpoint.postgres import PostgresSaver
 from src.rag.agents.state import AgentState
 from src.rag.agents.nodes import vision_node, retrieval_node, generator_node
+
+load_dotenv()
 
 # Graph Wiring Configuration
 builder = StateGraph(AgentState)
@@ -14,28 +20,43 @@ builder.add_edge("vision_analyzer", "context_retriever")
 builder.add_edge("context_retriever", "response_generator")
 builder.add_edge("response_generator", END)
 
-skin_care_graph = builder.compile()
+# --- Supabase PostgreSQL Checkpointer Setup ---
+DB_URI = os.getenv("SUPABASE_DB_URL")
+
+connection_kwargs = {
+    "autocommit": True,
+    "prepare_threshold": 0,  # Required for Supabase Transaction Pooler (port 6543)
+}
+
+pool = ConnectionPool(
+    conninfo=DB_URI,
+    max_size=20,
+    kwargs=connection_kwargs,
+)
+
+# Initialize PostgresSaver and auto-create LangGraph checkpoint tables in Supabase
+memory = PostgresSaver(pool)
+memory.setup()
+
+# Compile graph with persistent memory checkpointer
+skin_care_graph = builder.compile(checkpointer=memory)
 
 
 # --- Local Testing Multi-Case Matrix Verification ---
 if __name__ == "__main__":
     print("\n================== LAUNCHING LANGGRAPH RUNTIME TEST ==================\n")
     
-    # Verification Configuration
     SAMPLE_IMAGE = "E:\\rag-eval\\cystic acne.jpg"
     SAMPLE_TEXT = "Is it fine to clean my face with warm water daily?"
+    test_config = {"configurable": {"thread_id": "test_user:thread_1"}}
 
-    # --- Verification 1: Case 1 (Image Only) ---
-    print("\n--- Testing Case 1: Image Only ---")
-    case_1_output = skin_care_graph.invoke({"image_path": SAMPLE_IMAGE, "user_query": None})
-    print(f"Condition: {case_1_output['detected_condition']}\nAnswer: {case_1_output['final_response'][:150]}...\n")
-
-    # --- Verification 2: Case 2 (Text Only) ---
-    print("--- Testing Case 2: Text Only ---")
-    case_2_output = skin_care_graph.invoke({"image_path": None, "user_query": SAMPLE_TEXT})
+    print("--- Testing Text Only with Supabase Persistence ---")
+    case_2_output = skin_care_graph.invoke(
+        {
+            "messages": [("user", SAMPLE_TEXT)],
+            "image_path": None,
+            "user_query": SAMPLE_TEXT,
+        },
+        config=test_config,
+    )
     print(f"Condition: {case_2_output['detected_condition']}\nAnswer: {case_2_output['final_response'][:150]}...\n")
-
-    # --- Verification 3: Case 3 (Both Image & Text) ---
-    print("--- Testing Case 3: Image + Text ---")
-    case_3_output = skin_care_graph.invoke({"image_path": SAMPLE_IMAGE, "user_query": SAMPLE_TEXT})
-    print(f"Condition: {case_3_output['detected_condition']}\nAnswer: {case_3_output['final_response'][:150]}...\n")
