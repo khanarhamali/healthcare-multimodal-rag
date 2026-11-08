@@ -1,18 +1,21 @@
 import os
 from src.rag.agents.state import AgentState
 from src.rag.tools.tools import analyze_skin_image
-from src.rag.test_retriever import build_retriever
-from src.rag.test_generator import generate
+from src.rag.components.test_retriever import build_retriever
+from src.rag.components.test_generator import generate
 
 # Initialize the vector store retriever instance globally
 retriever_instance = build_retriever()
 
 
 def vision_node(state: AgentState) -> dict:
-    """Handles cases with or without input image paths safely."""
+    """Handles cases with or without input image paths/URLs safely."""
     img_path = state.get("image_path")
     
-    if not img_path or not os.path.exists(img_path):
+    is_url = isinstance(img_path, str) and img_path.startswith(("http://", "https://"))
+    is_local_file = isinstance(img_path, str) and os.path.exists(img_path)
+
+    if not img_path or (not is_url and not is_local_file):
         print("Graph Node [Vision]: Case 2 detected (Text Only). Skipping tool.")
         return {"detected_condition": "None"}
         

@@ -1,6 +1,8 @@
 import os
 import sys
 import torch
+import requests
+from io import BytesIO
 import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
@@ -55,11 +57,16 @@ class SkinVisionPredictor:
         return model
 
     def predict_skin_issue(self, image_path):
-        """Processes the image and extracts the prediction along with the confidence score"""
-        if not os.path.exists(image_path):
-            raise FileNotFoundError(f"Test image '{image_path}' not found!")
-            
-        image = Image.open(image_path).convert("RGB")
+        """Processes the image from either a web URL (Supabase) or local file path"""
+        if image_path.startswith(("http://", "https://")):
+            response = requests.get(image_path, timeout=15)
+            response.raise_for_status()
+            image = Image.open(BytesIO(response.content)).convert("RGB")
+        else:
+            if not os.path.exists(image_path):
+                raise FileNotFoundError(f"Test image '{image_path}' not found!")
+            image = Image.open(image_path).convert("RGB")
+
         image = self.transform(image).unsqueeze(0).to(self.device)
 
         with torch.no_grad():

@@ -6,10 +6,10 @@ from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-load_dotenv() 
+load_dotenv(override=True) 
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "data")
-DB_FAISS_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "vectorstore", "db_faiss")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "data")
+DB_FAISS_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "..", "vectorstore", "db_faiss")
 
 
 def load_pdfs():
