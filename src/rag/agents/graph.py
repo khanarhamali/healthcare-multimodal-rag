@@ -20,17 +20,23 @@ builder.add_edge("vision_analyzer", "context_retriever")
 builder.add_edge("context_retriever", "response_generator")
 builder.add_edge("response_generator", END)
 
-# --- Supabase PostgreSQL Checkpointer Setup ---
+# --- Supabase PostgreSQL Checkpointer Setup (Auto-Reconnect & Pooler Safe) ---
 DB_URI = os.getenv("SUPABASE_DB_URL")
 
 connection_kwargs = {
     "autocommit": True,
-    "prepare_threshold": 0,  # Required for Supabase Transaction Pooler (port 6543)
+    "prepare_threshold": None,  # Completely disables prepared statements for Supabase Transaction Pooler (port 6543)
+    "keepalives": 1,
+    "keepalives_idle": 30,
+    "keepalives_interval": 10,
+    "keepalives_count": 5,
 }
 
 pool = ConnectionPool(
     conninfo=DB_URI,
+    min_size=1,
     max_size=20,
+    max_lifetime=300,                       # Recycle connections every 5 minutes before Supabase closes idle sockets
     kwargs=connection_kwargs,
 )
 
