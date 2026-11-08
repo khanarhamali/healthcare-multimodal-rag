@@ -1,4 +1,4 @@
-# DermaAI — Multimodal Healthvare RAG Backend
+# DermaAI — Multimodal Healthcare RAG Backend
 
 An AI-powered dermatology consultation backend built with **FastAPI**, **LangGraph**, **PyTorch (EfficientNet-B0)**, **Pinecone**, **FAISS for Hyperparamter Testing** and **Supabase (PostgreSQL + Storage)**. It processes patient skin images alongside clinical queries, retrieves grounded dermatological knowledge, and streams responses in real time.
 
